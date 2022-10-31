@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="search_repositories">Search repositories</string>
+    <string name="search_repositories_latest">Latest searched repositories"</string>
+    <string name="search_repositories_hint">owner name/repository name</string>
+    <string name="search_repositories_repository_name">Repository name: %1$s</string>
+    <string name="search_repositories_repository_id">Repository ID: %1$s</string>
+    <string name="search_repositories_author">Author: %1$s</string>
+    <string name="search_repositories_message">Message: %1$s</string>
+    <string name="search_repositories_sha">Sha: %1$s</string>
+    <string name="search_repositories_snack_bar_title">You have %1$d commits to share</string>
+    <string name="search_repositories_snack_bar_action">Share commits</string>
+    <string name="search_repositories_dialog_error_title">Wrong search phrase</string>
+    <string name="search_repositories_dialog_error_message">There was provided incorrect scheme of request.\n\nSearch phrase should contains owner and repository name together, and separate by splash.</string>
+
+    <string name="search_repositories_repository_not_found_dialog_error_title">Repository not found</string>
+    <string name="search_repositories_repository_not_found_error_message">Probably wrong repository name and owner name were provided.\n\nTry again.</string>
+
+</resources>
