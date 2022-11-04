@@ -15,7 +15,10 @@ object RepositoryNetworkModule {
 
     @Provides
     fun provideRepositoriesServiceApi(): RepositoriesServiceApi {
-        return RetrofitClientProvider.provideClient("https://api.github.com/", RepositoriesServiceApi::class.java)
+        return RetrofitClientProvider.provideClient(
+            "https://api.github.com/",
+            RepositoriesServiceApi::class.java
+        )
     }
 
     @Provides

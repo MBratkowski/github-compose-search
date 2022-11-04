@@ -6,7 +6,7 @@ class SearchRepositoriesActionProvider(
     private val viewModel: SearchRepositoriesViewModel
 ) {
 
-    fun provideSearchRepositoryAction(): (searchedRepository: String) -> Unit {
+    fun invokeSearchRepositoryAction(): (searchedRepository: String) -> Unit {
         return {
             viewModel.dispatchEvent(
                 SearchRepositoriesViewEvent.SearchRepository(
@@ -16,7 +16,7 @@ class SearchRepositoriesActionProvider(
         }
     }
 
-    fun provideOpenRepositoryDetailsAction(): (repositoryInformation: RepositoryInformation) -> Unit {
+    fun invokeOpenRepositoryDetailsAction(): (repositoryInformation: RepositoryInformation) -> Unit {
         return {
             viewModel.dispatchEvent(
                 SearchRepositoriesViewEvent.OpenRepositoryDetails(
@@ -26,7 +26,9 @@ class SearchRepositoriesActionProvider(
         }
     }
 
-    fun provideOnCommitCheckedAction(snackBarCallback: () -> Unit): (isChecked: Boolean, commitSha: String) -> Unit {
+    fun invokeOnCommitCheckedAction(
+        snackBarCallback: () -> Unit
+    ): (isChecked: Boolean, commitSha: String) -> Unit {
         return { isChecked, commitSha ->
             viewModel.dispatchEvent(
                 SearchRepositoriesViewEvent.AddCommitToShare(
@@ -38,7 +40,9 @@ class SearchRepositoriesActionProvider(
         }
     }
 
-    fun provideOnCommitSelectionAction(snackBarCallback: () -> Unit): (isSelectedMode: Boolean) -> Unit {
+    fun invokeOnCommitSelectionAction(
+        snackBarCallback: () -> Unit
+    ): (isSelectedMode: Boolean) -> Unit {
         return { isSelectedMode ->
             if (!isSelectedMode) {
                 viewModel.dispatchEvent(SearchRepositoriesViewEvent.CleanCommitsToShare)

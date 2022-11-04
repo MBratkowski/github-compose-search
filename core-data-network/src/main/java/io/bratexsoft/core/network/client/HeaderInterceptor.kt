@@ -2,13 +2,16 @@ package io.bratexsoft.core.network.client
 
 import io.bratexsoft.core.data.network.BuildConfig
 import okhttp3.Interceptor
-import okhttp3.Request
 import okhttp3.Response
 
 class HeaderInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val requestBuilder: Request.Builder = chain.request().newBuilder()
-        requestBuilder.header("Authorization", "Bearer ${BuildConfig.apiKey}")
-        return chain.proceed(requestBuilder.build())
+        chain.request()
+            .newBuilder()
+            .apply {
+                header("Authorization", "Bearer ${BuildConfig.apiKey}")
+            }.also {
+                return chain.proceed(it.build())
+            }
     }
 }

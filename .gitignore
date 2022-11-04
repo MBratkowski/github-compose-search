@@ -23,3 +23,5 @@ api.properties
 /gradle/wrapper/native/
 /gradle/wrapper/wrapper/
 /gradle/wrapper/android.lock/
+feature-commitsList/build
+core-navigation/build

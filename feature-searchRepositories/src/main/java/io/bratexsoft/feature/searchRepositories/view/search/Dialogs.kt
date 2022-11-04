@@ -8,7 +8,9 @@ import androidx.compose.ui.res.stringResource
 import io.bratexsoft.feature.searchRepositories.R
 
 @Composable
-fun IncorrectPayloadErrorDialog(onClick: () -> Unit) {
+fun IncorrectPayloadErrorDialog(
+    onClick: () -> Unit
+) {
     AlertDialog(
         onDismissRequest = onClick,
         title = {
@@ -28,7 +30,9 @@ fun IncorrectPayloadErrorDialog(onClick: () -> Unit) {
 }
 
 @Composable
-fun ResultNotFoundErrorDialog(onClick: () -> Unit) {
+fun ResultNotFoundErrorDialog(
+    onClick: () -> Unit
+) {
     AlertDialog(
         onDismissRequest = onClick,
         title = {

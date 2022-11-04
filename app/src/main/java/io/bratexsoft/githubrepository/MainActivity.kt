@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
 import io.bratexsoft.core.designsystem.theme.GithubRepositoryTheme
 import io.bratexsoft.feature.searchRepositories.util.SendCommitsIntentProvider
+import io.bratexsoft.feature.searchRepositories.util.TextContentProvider
 import io.bratexsoft.feature.searchRepositories.view.search.SearchRepositoriesScreen
 import javax.inject.Inject
 
@@ -18,6 +19,10 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var sendCommitsIntentProvider: SendCommitsIntentProvider
+
+    @Inject
+    lateinit var textContentProvider: TextContentProvider
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -27,7 +32,8 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     SearchRepositoriesScreen(
-                        sendCommitsIntentProvider = sendCommitsIntentProvider
+                        sendCommitsIntentProvider = sendCommitsIntentProvider,
+                        textContentProvider = textContentProvider,
                     )
                 }
             }

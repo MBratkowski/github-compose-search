@@ -1,6 +1,5 @@
 package io.bratexsoft.feature.searchRepositories.view.search
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -24,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import io.bratexsoft.core.data.api.model.CommitInformation
@@ -32,6 +30,7 @@ import io.bratexsoft.core.data.api.model.RepositoryInformation
 import io.bratexsoft.core.designsystem.component.*
 import io.bratexsoft.feature.searchRepositories.R
 import io.bratexsoft.feature.searchRepositories.util.SendCommitsIntentProvider
+import io.bratexsoft.feature.searchRepositories.util.TextContentProvider
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import io.bratexsoft.core.designsystem.R.dimen as designSystemDimens
@@ -42,16 +41,15 @@ typealias OnClickWithRepository = (repositoryItem: RepositoryInformation) -> Uni
 typealias OnCommitChecked = (isChecked: Boolean, commitSha: String) -> Unit
 typealias OnCommitSelection = (isSelectedMode: Boolean) -> Unit
 
-
-@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchRepositoriesScreen(
     viewModel: SearchRepositoriesViewModel = hiltViewModel(),
     actionProvider: SearchRepositoriesActionProvider = SearchRepositoriesActionProvider(viewModel),
-    sendCommitsIntentProvider: SendCommitsIntentProvider
+    sendCommitsIntentProvider: SendCommitsIntentProvider,
+    textContentProvider: TextContentProvider,
 ) {
-    val uiEvent = viewModel.uiEvent.collectAsState(initial = null)
+    val uiEffect = viewModel.uiEffect.collectAsState(initial = null)
     val uiState = viewModel.uiState.collectAsState()
 
     val snackBarHostState = remember { SnackbarHostState() }
@@ -84,27 +82,22 @@ fun SearchRepositoriesScreen(
     LaunchedEffect(key1 = "") {
         viewModel.dispatchEvent(SearchRepositoriesViewEvent.GetSearchedRepositories)
     }
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackBarHostState)
-        },
-        content = { innerPadding ->
-            Modifier.padding(innerPadding)
-            Column(modifier = Modifier.padding(dimensionResource(id = designSystemDimens.spacingLarge))) {
-                Search(searchRepository = actionProvider.provideSearchRepositoryAction())
-                Content(
-                    uiState.value,
-                    openRepositoryDetails = actionProvider.provideOpenRepositoryDetailsAction(),
-                    onCommitChecked = actionProvider.provideOnCommitCheckedAction {
-                        showSnackBar()
-                    },
-                    onCommitSelection = actionProvider.provideOnCommitSelectionAction { snackBarJob?.cancel() }
-                )
-            }
+    Scaffold(snackbarHost = {
+        SnackbarHost(hostState = snackBarHostState)
+    }, content = { innerPadding ->
+        Modifier.padding(innerPadding)
+        Column(modifier = Modifier.padding(dimensionResource(id = designSystemDimens.spacingLarge))) {
+            Search(searchRepository = actionProvider.invokeSearchRepositoryAction())
+            Content(
+                uiState.value,
+                textContentProvider = textContentProvider,
+                openRepositoryDetails = actionProvider.invokeOpenRepositoryDetailsAction(),
+                onCommitChecked = actionProvider.invokeOnCommitCheckedAction { showSnackBar() },
+                onCommitSelection = actionProvider.invokeOnCommitSelectionAction { snackBarJob?.cancel() })
         }
-    )
+    })
 
-    uiEvent.value?.let {
+    uiEffect.value?.let {
         when (it) {
             is SearchRepositoryViewEffect.IncorrectPayloadErrorDialog -> {
                 IncorrectPayloadErrorDialog {
@@ -130,6 +123,7 @@ fun SearchRepositoriesScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun Search(searchRepository: OnClickWithString) {
+
     val keyboardController = LocalSoftwareKeyboardController.current
     var searchedRepositoryTextFieldValue by remember { mutableStateOf(TextFieldValue("")) }
 
@@ -159,24 +153,25 @@ fun Search(searchRepository: OnClickWithString) {
 @Composable
 fun Content(
     state: SearchRepositoriesState,
+    textContentProvider: TextContentProvider,
     openRepositoryDetails: OnClickWithRepository,
     onCommitChecked: OnCommitChecked,
     onCommitSelection: OnCommitSelection,
 ) {
-    Crossfade(targetState = state.provideStateStatus()) {
+    Crossfade(targetState = state.provideScreenState()) {
         when (it) {
-            is StateStatus.Loading -> CenterCircleProgressIndicator(state.isLoading)
-            is StateStatus.Content.Repository -> RepositoryInformation(
+            is ScreenState.Loading -> CenterCircleProgressIndicator(state.isLoading)
+            is ScreenState.Content.Repository -> RepositoryInformation(
                 repositoryInformation = it.repositoryInformation,
+                textContentProvider = textContentProvider,
                 onCommitChecked = onCommitChecked,
                 onCommitSelection = onCommitSelection
             )
-            is StateStatus.Content.SearchedRepositories -> SearchedRepositories(
-                it.searchedRepositories,
-                openRepositoryDetails = openRepositoryDetails
+            is ScreenState.Content.SearchedRepositories -> SearchedRepositories(
+                it.searchedRepositories, openRepositoryDetails = openRepositoryDetails
             )
-            is StateStatus.Idle -> {
-
+            is ScreenState.Idle -> {
+                // Do nothing
             }
         }
     }
@@ -192,14 +187,11 @@ fun SearchedRepositories(
         HeadlineSmall(text = stringResource(id = R.string.search_repositories_latest))
         SpacerSmall()
         LazyColumn(content = {
-            items(
-                items = searchedRepositories,
-                itemContent = {
-                    RepositoryItem(
-                        repositoryInformation = it,
-                        openRepositoryDetails = openRepositoryDetails
-                    )
-                })
+            items(items = searchedRepositories, itemContent = {
+                RepositoryItem(
+                    repositoryInformation = it, openRepositoryDetails = openRepositoryDetails
+                )
+            })
         })
     }
 }
@@ -209,11 +201,9 @@ fun RepositoryItem(
     repositoryInformation: RepositoryInformation,
     openRepositoryDetails: OnClickWithRepository
 ) {
-    BaseCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { openRepositoryDetails(repositoryInformation) }
-    ) {
+    BaseCard(modifier = Modifier
+        .fillMaxWidth()
+        .clickable { openRepositoryDetails(repositoryInformation) }) {
         Column(modifier = Modifier.padding(dimensionResource(id = designSystemDimens.spacingMedium))) {
             Text(
                 text = stringResource(
@@ -238,10 +228,8 @@ fun CenterCircleProgressIndicator(isVisible: Boolean) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        AnimatedVisibility(
-            visible = isVisible,
-            enter = fadeIn(),
-            exit = fadeOut()
+        FadeInFadeOutAnimation(
+            visibility = isVisible
         ) {
             CircularProgressIndicator()
         }
@@ -250,6 +238,7 @@ fun CenterCircleProgressIndicator(isVisible: Boolean) {
 
 @Composable
 fun RepositoryInformation(
+    textContentProvider: TextContentProvider,
     repositoryInformation: RepositoryInformation?,
     onCommitChecked: OnCommitChecked,
     onCommitSelection: OnCommitSelection
@@ -265,12 +254,13 @@ fun RepositoryInformation(
                         id = R.string.search_repositories_repository_id,
                         repositoryInformation.repositoryId
                     ),
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(dimensionResource(id = designSystemDimens.spacingMedium))
                 )
             }
             SpacerMedium()
             CommitsList(
                 commitsList = repositoryInformation.commitInformationList,
+                textContentProvider = textContentProvider,
                 onCommitChecked = onCommitChecked,
                 onCommitSelection = onCommitSelection
             )
@@ -281,24 +271,23 @@ fun RepositoryInformation(
 @Composable
 fun CommitsList(
     commitsList: List<CommitInformation>,
+    textContentProvider: TextContentProvider,
     onCommitChecked: OnCommitChecked,
     onCommitSelection: OnCommitSelection
 ) {
     var selectionMode by remember { mutableStateOf(false) }
     LazyColumn(content = {
-        items(
-            items = commitsList,
-            itemContent = {
-                CommitItem(
-                    commitInformation = it,
-                    selectionMode,
-                    onLongClick = {
-                        selectionMode = !selectionMode
-                        onCommitSelection(selectionMode)
-                    },
-                    onCheckedChange = onCommitChecked
-                )
-            })
+        items(items = commitsList, itemContent = {
+            CommitItem(
+                commitInformation = it,
+                textContentProvider = textContentProvider,
+                selectionMode,
+                onLongClick = {
+                    selectionMode = !selectionMode
+                    onCommitSelection(selectionMode)
+                }, onCheckedChange = onCommitChecked
+            )
+        })
     })
 }
 
@@ -306,9 +295,10 @@ fun CommitsList(
 @Composable
 fun CommitItem(
     commitInformation: CommitInformation,
+    textContentProvider: TextContentProvider,
     isSelectionMode: Boolean,
     onLongClick: () -> Unit,
-    onCheckedChange: (checked: Boolean, commitSha: String) -> Unit
+    onCheckedChange: OnCommitChecked
 ) {
     BaseCard() {
         Row {
@@ -316,9 +306,7 @@ fun CommitItem(
                 modifier = Modifier
                     .padding(dimensionResource(id = designSystemDimens.spacingMedium))
                     .clip(RoundedCornerShape(dimensionResource(id = designSystemDimens.spacingMedium)))
-                    .combinedClickable(
-                        onLongClick = onLongClick,
-                        onClick = { })
+                    .combinedClickable(onLongClick = onLongClick, onClick = { })
                     .padding(dimensionResource(id = designSystemDimens.spacingMedium))
             ) {
                 Row(
@@ -327,42 +315,17 @@ fun CommitItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = stringResource(
-                                id = R.string.search_repositories_author,
-                                commitInformation.author
-                            ),
-                            maxLines = 1
-                        )
-                        Text(
-                            text = stringResource(
-                                id = R.string.search_repositories_message,
-                                commitInformation.message
-                            ),
-                            maxLines = 1
-                        )
-                        Text(
-                            text = stringResource(
-                                id = R.string.search_repositories_sha,
-                                commitInformation.sha.dropLast(15)
-                            ),
-                            overflow = TextOverflow.Visible,
-                            maxLines = 1
-                        )
+                        OneLineText(text = textContentProvider.provideAuthor(commitInformation.author))
+                        OneLineText(text = commitInformation.message)
+                        OneLineText(text = commitInformation.sha.dropLast(15))
                     }
                     Box(modifier = Modifier.width(48.dp)) {
-                        this@Column.AnimatedVisibility(
-                            visible = isSelectionMode,
-                            enter = fadeIn(),
-                            exit = fadeOut()
-                        ) {
+                        FadeInFadeOutAnimation(visibility = isSelectionMode) {
                             var isSelected by rememberSaveable { mutableStateOf(false) }
-                            Checkbox(
-                                checked = isSelected,
-                                onCheckedChange = {
-                                    isSelected = it
-                                    onCheckedChange(it, commitInformation.sha)
-                                })
+                            Checkbox(checked = isSelected, onCheckedChange = {
+                                isSelected = it
+                                onCheckedChange(it, commitInformation.sha)
+                            })
                         }
                     }
                 }
@@ -372,21 +335,26 @@ fun CommitItem(
 }
 
 @Composable
-fun SearchButton(onClick: () -> Unit, text: String) {
+fun SearchButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+    text: String
+) {
     val animatedButtonColors = animateColorAsState(
         targetValue = if (text.isNotEmpty()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
         animationSpec = tween(100, 0)
     )
     Button(
+        modifier = modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
             containerColor = animatedButtonColors.value,
             disabledContainerColor = animatedButtonColors.value,
         ),
         onClick = onClick,
-        enabled = text.isNotEmpty(),
-        modifier = Modifier.fillMaxWidth()
+        enabled = text.isNotEmpty()
     ) {
         Text(
+            modifier = modifier,
             text = stringResource(id = R.string.search_repositories),
         )
     }

@@ -9,6 +9,7 @@ import io.bratexsoft.core.data.api.model.CommitInformation
 import io.bratexsoft.core.data.api.model.RepositoryInformation
 import io.bratexsoft.feature.searchRepositories.usecase.GetRepositoriesUseCase
 import io.bratexsoft.feature.searchRepositories.usecase.GetSearchedRepositoriesUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -22,8 +23,8 @@ class SearchRepositoriesViewModel @Inject constructor(
     private val getLastSearchedRepositoriesUseCase: GetSearchedRepositoriesUseCase
 ) : ViewModel() {
 
-    private val _uiEvent = MutableSharedFlow<SearchRepositoryViewEffect?>()
-    val uiEvent: SharedFlow<SearchRepositoryViewEffect?> = _uiEvent
+    private val _uiEffect = MutableSharedFlow<SearchRepositoryViewEffect?>()
+    val uiEffect: SharedFlow<SearchRepositoryViewEffect?> = _uiEffect
 
     private val _uiState = MutableStateFlow(SearchRepositoriesState())
     val uiState: StateFlow<SearchRepositoriesState> = _uiState
@@ -36,9 +37,7 @@ class SearchRepositoriesViewModel @Inject constructor(
             is SearchRepositoriesViewEvent.AddCommitToShare -> addCommitToShare(event)
             is SearchRepositoriesViewEvent.CleanCommitsToShare -> clearCommitsToShare()
             is SearchRepositoriesViewEvent.DismissDialog ->
-                viewModelScope.launch {
-                    _uiEvent.emit(null)
-                }
+                viewModelScope.launch { _uiEffect.emit(null) }
         }
     }
 
@@ -59,9 +58,9 @@ class SearchRepositoriesViewModel @Inject constructor(
     }
 
     private fun getSearchedRepositories() {
-        viewModelScope.launch {
-            _uiState.updateState {
-                _uiState.value.copy(
+        viewModelScope.launch(Dispatchers.IO) {
+            _uiState.updateState { currentState ->
+                currentState.copy(
                     searchedRepositories = getLastSearchedRepositoriesUseCase()
                 )
             }
@@ -69,30 +68,30 @@ class SearchRepositoriesViewModel @Inject constructor(
     }
 
     private fun searchRepositories(repositoryName: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                _uiState.updateState {
-                    _uiState.value.copy(
+                _uiState.updateState { currentState ->
+                    currentState.copy(
                         isLoading = true
                     )
                 }
                 val result = getRepositoriesUseCase(repositoryName)
-                _uiState.updateState {
-                    _uiState.value.copy(
+                _uiState.updateState { currentState ->
+                    currentState.copy(
                         repositoryInformation = result,
                         isLoading = false
                     )
                 }
             } catch (error: Throwable) {
-                _uiEvent.emit(error.convertToViewEffect())
-                _uiState.updateState { _uiState.value.copy(isLoading = false) }
+                _uiEffect.emit(error.convertToViewEffect())
+                _uiState.updateState { currentState -> currentState.copy(isLoading = false) }
             }
         }
     }
 
     private fun showRepositoryDetails(repositoryInformation: RepositoryInformation) {
-        _uiState.updateState {
-            _uiState.value.copy(repositoryInformation = repositoryInformation)
+        _uiState.updateState { currentState ->
+            currentState.copy(repositoryInformation = repositoryInformation)
         }
     }
 
@@ -103,8 +102,8 @@ class SearchRepositoriesViewModel @Inject constructor(
         } else {
             currentShaCommitsList.add(event.commitSha)
         }
-        _uiState.updateState {
-            _uiState.value.copy(
+        _uiState.updateState { currentState ->
+            currentState.copy(
                 shaCommitToShareList = currentShaCommitsList
             )
         }
@@ -113,8 +112,8 @@ class SearchRepositoriesViewModel @Inject constructor(
     private fun clearCommitsToShare() {
         val currentShaCommitsList = _uiState.value.shaCommitToShareList
         currentShaCommitsList.clear()
-        _uiState.updateState {
-            _uiState.value.copy(
+        _uiState.updateState { currentState ->
+            currentState.copy(
                 shaCommitToShareList = currentShaCommitsList
             )
         }
@@ -132,6 +131,6 @@ fun Throwable.convertToViewEffect(): SearchRepositoryViewEffect {
     }
 }
 
-inline fun <T> MutableStateFlow<T>.updateState(state: () -> T) {
-    this.value = state()
+inline fun <T> MutableStateFlow<T>.updateState(state: (state: T) -> T) {
+    this.value = state(this.value)
 }

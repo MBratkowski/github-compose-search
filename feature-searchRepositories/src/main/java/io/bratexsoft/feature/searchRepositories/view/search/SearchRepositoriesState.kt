@@ -8,25 +8,25 @@ data class SearchRepositoriesState(
     val searchedRepositories: List<RepositoryInformation>? = null,
     val repositoryInformation: RepositoryInformation? = null
 ) {
-    fun provideStateStatus(): StateStatus {
+    fun provideScreenState(): ScreenState {
         return when {
-            isLoading -> StateStatus.Loading
-            repositoryInformation != null -> StateStatus.Content.Repository(repositoryInformation)
-            searchedRepositories != null -> StateStatus.Content.SearchedRepositories(
+            isLoading -> ScreenState.Loading
+            repositoryInformation != null -> ScreenState.Content.Repository(repositoryInformation)
+            searchedRepositories != null -> ScreenState.Content.SearchedRepositories(
                 searchedRepositories
             )
-            else -> StateStatus.Idle
+            else -> ScreenState.Idle
         }
     }
 }
 
-sealed interface StateStatus {
-    object Loading : StateStatus
-    sealed class Content : StateStatus {
+sealed interface ScreenState {
+    object Loading : ScreenState
+    sealed class Content : ScreenState {
         data class Repository(val repositoryInformation: RepositoryInformation) : Content()
         data class SearchedRepositories(val searchedRepositories: List<RepositoryInformation>) :
             Content()
     }
 
-    object Idle : StateStatus
+    object Idle : ScreenState
 }
