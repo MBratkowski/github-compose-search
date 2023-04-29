@@ -59,7 +59,6 @@ data class Repositories(
     val openIssuesCount: Int,
     val owner: Owner,
     val permissions: Permissions,
-    val `private`: Boolean,
     val pullsUrl: String,
     val pushedAt: String,
     val releasesUrl: String,

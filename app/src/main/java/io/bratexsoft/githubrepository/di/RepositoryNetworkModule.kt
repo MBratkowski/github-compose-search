@@ -22,7 +22,9 @@ object RepositoryNetworkModule {
     }
 
     @Provides
-    fun provideRepositoriesNetworkDataSource(repositoriesServiceApi: RepositoriesServiceApi): RepositoriesNetworkDataSource {
+    fun provideRepositoriesNetworkDataSource(
+        repositoriesServiceApi: RepositoriesServiceApi
+    ): RepositoriesNetworkDataSource {
         return RepositoriesNetworkDataSourceImpl(repositoriesServiceApi)
     }
 }
