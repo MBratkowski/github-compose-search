@@ -110,7 +110,7 @@ fun SearchRepositoriesScreen(
         }
     }
 
-    LaunchedEffect(key1 = "") {
+    LaunchedEffect(key1 = Unit) {
         viewModel.dispatchEvent(SearchRepositoriesViewEvent.GetSearchedRepositories)
     }
     Scaffold(snackbarHost = {

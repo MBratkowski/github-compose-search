@@ -17,7 +17,9 @@ object RetrofitClientProvider {
             .baseUrl(host)
             .addConverterFactory(
                 GsonConverterFactory.create(
-                    GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssz").create()
+                    GsonBuilder()
+                        .setDateFormat("yyyy-MM-dd'T'HH:mm:ssz")
+                        .create()
                 )
             )
             .build()

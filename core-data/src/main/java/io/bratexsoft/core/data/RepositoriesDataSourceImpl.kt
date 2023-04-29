@@ -15,19 +15,12 @@ class RepositoriesDataSourceImpl @Inject constructor(
 
     override suspend fun getRepositoryInfo(organizationInformation: OrganizationInformation): RepositoryInformation {
         val repositories = repositoriesNetworkDataSource.getRepositories(organizationInformation)
-        val commits = repositoriesNetworkDataSource.getRepositoryCommits(organizationInformation)
+        // FIXME val commits = repositoriesNetworkDataSource.getRepositoryCommits(organizationInformation)
 
         val repositoryInformation = RepositoryInformation(
-            repositoryName = repositories.name,
-            repositoryId = repositories.id,
-            commitInformationList = commits.map { item ->
-                CommitInformation(
-                    date = item.commit.author.date,
-                    message = item.commit.message,
-                    sha = item.sha,
-                    author = item.author.login
-                )
-            }.sortedByDescending { it.date }
+            repositoryName = repositories.name.value,
+            repositoryId = repositories.id.value,
+            commitInformationList = emptyList()
         )
 
         repositoriesLocalDataSource.insertRepository(repositoryInformation)

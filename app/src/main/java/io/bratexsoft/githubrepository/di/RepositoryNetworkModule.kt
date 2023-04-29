@@ -8,6 +8,7 @@ import io.bratexsoft.core.network.api.RepositoriesServiceApi
 import io.bratexsoft.core.network.client.RetrofitClientProvider
 import io.bratexsoft.core.network.datasource.RepositoriesNetworkDataSource
 import io.bratexsoft.core.network.datasource.RepositoriesNetworkDataSourceImpl
+import io.bratexsoft.core.network.mapper.RepositoriesMapper
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -16,15 +17,19 @@ object RepositoryNetworkModule {
     @Provides
     fun provideRepositoriesServiceApi(): RepositoriesServiceApi {
         return RetrofitClientProvider.provideClient(
-            "https://api.github.com/",
-            RepositoriesServiceApi::class.java
+            host = "https://api.github.com/",
+            api = RepositoriesServiceApi::class.java
         )
     }
 
     @Provides
     fun provideRepositoriesNetworkDataSource(
-        repositoriesServiceApi: RepositoriesServiceApi
+        repositoriesServiceApi: RepositoriesServiceApi,
+        repositoriesMapper: RepositoriesMapper
     ): RepositoriesNetworkDataSource {
-        return RepositoriesNetworkDataSourceImpl(repositoriesServiceApi)
+        return RepositoriesNetworkDataSourceImpl(
+            repositoriesServiceApi = repositoriesServiceApi,
+            repositoriesMapper = repositoriesMapper
+        )
     }
 }
