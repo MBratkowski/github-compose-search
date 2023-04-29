@@ -1,5 +1,6 @@
 package io.bratexsoft.core.network.datasource
 
+import android.annotation.SuppressLint
 import io.bratexsoft.core.data.api.error.RepositoryNotFoundException
 import io.bratexsoft.core.data.api.model.CommitsListItem
 import io.bratexsoft.core.data.api.model.OrganizationInformation
@@ -13,6 +14,7 @@ class RepositoriesNetworkDataSourceImpl(
     private val repositoriesServiceApi: RepositoriesServiceApi
 ) : RepositoriesNetworkDataSource {
 
+    @SuppressWarnings("TooGenericExceptionCaught")
     override suspend fun getRepositories(organizationInformation: OrganizationInformation): Repositories {
         try {
             return repositoriesServiceApi.getRepositories(
@@ -36,5 +38,4 @@ class RepositoriesNetworkDataSourceImpl(
             organizationInformation.repositoryName
         ).map { it.toDomain() }
     }
-
 }

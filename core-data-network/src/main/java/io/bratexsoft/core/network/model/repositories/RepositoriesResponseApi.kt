@@ -1,6 +1,7 @@
 package io.bratexsoft.core.network.model.repositories
 
 
+import android.annotation.SuppressLint
 import com.google.gson.annotations.SerializedName
 import io.bratexsoft.core.data.api.model.License
 import io.bratexsoft.core.data.api.model.Repositories
@@ -122,8 +123,6 @@ data class RepositoriesResponseApi(
     val owner: OwnerResponseApi,
     @SerializedName("permissions")
     val permissions: PermissionsResponseApi,
-    @SerializedName("private")
-    val `private`: Boolean,
     @SerializedName("pulls_url")
     val pullsUrl: String,
     @SerializedName("pushed_at")
@@ -172,6 +171,7 @@ data class RepositoriesResponseApi(
     val webCommitSignoffRequired: Boolean
 )
 
+@SuppressWarnings("LongMethod")
 fun RepositoriesResponseApi.toDomain() = Repositories(
     allowForking = allowForking,
     archiveUrl = archiveUrl,
@@ -231,7 +231,6 @@ fun RepositoriesResponseApi.toDomain() = Repositories(
     owner = owner.toDomain(),
     openIssuesCount = openIssuesCount,
     permissions = permissions.toDomain(),
-    `private` = `private`,
     pullsUrl = pullsUrl,
     pushedAt = pushedAt,
     releasesUrl = releasesUrl,
@@ -255,5 +254,4 @@ fun RepositoriesResponseApi.toDomain() = Repositories(
     watchers = watchers,
     watchersCount = watchersCount,
     webCommitSignoffRequired = webCommitSignoffRequired
-
 )

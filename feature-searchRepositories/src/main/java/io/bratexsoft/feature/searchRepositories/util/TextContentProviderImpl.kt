@@ -7,8 +7,7 @@ import javax.inject.Inject
 
 class TextContentProviderImpl @Inject constructor(
     @ActivityContext val context: Context
-) :
-    TextContentProvider {
+) : TextContentProvider {
     override fun provideAuthor(author: String): String {
         return context.getString(
             R.string.search_repositories_author,

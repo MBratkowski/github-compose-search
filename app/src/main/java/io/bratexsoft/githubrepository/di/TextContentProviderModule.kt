@@ -9,8 +9,8 @@ import io.bratexsoft.feature.searchRepositories.util.TextContentProviderImpl
 
 @Module
 @InstallIn(ActivityComponent::class)
-abstract class TextContentProviderModule {
+interface  TextContentProviderModule {
 
     @Binds
-    abstract fun bindsTextContentProvider(textContentProviderImpl: TextContentProviderImpl): TextContentProvider
+    fun bindsTextContentProvider(textContentProviderImpl: TextContentProviderImpl): TextContentProvider
 }
