@@ -11,7 +11,8 @@ import io.bratexsoft.core.data.local.client.model.RepositoryInformationDb
 
 @Database(
     entities = [RepositoryInformationDb::class, CommitInformationDb::class],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 @TypeConverters(DateConverter::class)
 abstract class RepositoriesDatabaseClient : RoomDatabase() {
