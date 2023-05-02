@@ -7,11 +7,9 @@ import junit.framework.Assert.assertEquals
 import org.junit.Test
 import java.util.*
 
-
 class IntentMessageProviderTest {
 
     lateinit var sut: IntentMessageProvider
-
 
     private val commitsToShare: List<CommitInformation> = mutableListOf(
         CommitInformation(
@@ -19,7 +17,8 @@ class IntentMessageProviderTest {
             message = "Hello world",
             author = "Mateusz",
             sha = "1"
-        ), CommitInformation(
+        ),
+        CommitInformation(
             date = Date(),
             message = "Hello world 2",
             author = "Mateusz 2",
@@ -29,37 +28,37 @@ class IntentMessageProviderTest {
 
     @Test
     fun shouldReturnEmptyListForEmptyCommitList() {
-        //Arrange
+        // Arrange
         sut = IntentMessageProvider(TextContentProviderFake())
 
-        //Verify
+        // Verify
         val result = sut(emptyList())
 
-        //Assert
+        // Assert
         assertEquals(result, "")
     }
 
     @Test
     fun verifyIfTextIsParsedProperly() {
-        //Arrange
+        // Arrange
         sut = IntentMessageProvider(TextContentProviderFake())
 
-        //Verify
+        // Verify
         val result = sut(commitsToShare)
 
-        //Assert
+        // Assert
         assertEquals(result, ExpectedParsedResult)
     }
 }
 
 const val ExpectedParsedResult = "Author: Mateusz\n" +
-        "Message: Hello world\n" +
-        "Sha: 1\n" +
-        "\n" +
-        "Author: Mateusz 2\n" +
-        "Message: Hello world 2\n" +
-        "Sha: 2\n" +
-        "\n"
+    "Message: Hello world\n" +
+    "Sha: 1\n" +
+    "\n" +
+    "Author: Mateusz 2\n" +
+    "Message: Hello world 2\n" +
+    "Sha: 2\n" +
+    "\n"
 
 class TextContentProviderFake : TextContentProvider {
     override fun provideAuthor(author: String): String {

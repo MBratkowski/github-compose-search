@@ -1,7 +1,5 @@
 package io.bratexsoft.core.network.model.repositories
 
-
-import android.annotation.SuppressLint
 import com.google.gson.annotations.SerializedName
 import io.bratexsoft.core.data.api.model.License
 import io.bratexsoft.core.data.api.model.Repositories
@@ -219,7 +217,7 @@ fun RepositoriesResponseApi.toDomain() = Repositories(
     labelsUrl = labelsUrl,
     language = language ?: "",
     languagesUrl = languagesUrl,
-    license = license?.toDomain()?: License(),
+    license = license?.toDomain() ?: License(),
     mergesUrl = mergesUrl,
     milestonesUrl = milestonesUrl,
     mirrorUrl = mirrorUrl ?: "",

@@ -16,7 +16,6 @@ class IntentMessageProvider @Inject constructor(
                 stringBuilder.appendLine(textContentProvider.provideSha(sha))
                 stringBuilder.appendLine()
             }
-
         }
         return stringBuilder.toString()
     }

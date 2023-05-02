@@ -14,5 +14,4 @@ interface RepositoriesDao {
 
     @Query("SELECT * FROM repositoryInformation")
     suspend fun getRepositoryWithCommits(): List<RepositoryInformationDb>
-
 }

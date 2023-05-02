@@ -74,7 +74,8 @@ fun OneLineText(
 ) {
     Text(
         modifier = modifier,
-        text = text, maxLines = 1
+        text = text,
+        maxLines = 1
     )
 }
 

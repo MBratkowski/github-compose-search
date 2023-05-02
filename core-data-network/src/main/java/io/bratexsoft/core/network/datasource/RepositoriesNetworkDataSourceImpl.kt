@@ -1,6 +1,5 @@
 package io.bratexsoft.core.network.datasource
 
-import android.annotation.SuppressLint
 import io.bratexsoft.core.data.api.error.RepositoryNotFoundException
 import io.bratexsoft.core.data.api.model.CommitsListItem
 import io.bratexsoft.core.data.api.model.OrganizationInformation
@@ -23,9 +22,9 @@ class RepositoriesNetworkDataSourceImpl(
             ).toDomain()
         } catch (e: Throwable) {
             when (e) {
-                //I didn't have a time to make a correct error handling
+                // I didn't have a time to make a correct error handling
                 is HttpException -> {
-                    throw  RepositoryNotFoundException()
+                    throw RepositoryNotFoundException()
                 }
                 else -> throw e
             }

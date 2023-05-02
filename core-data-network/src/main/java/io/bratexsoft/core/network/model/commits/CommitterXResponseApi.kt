@@ -1,6 +1,5 @@
 package io.bratexsoft.core.network.model.commits
 
-
 import com.google.gson.annotations.SerializedName
 import io.bratexsoft.core.data.api.model.CommitterX
 
