@@ -1,14 +1,13 @@
 package io.bratexsoft.core.network
 
-import io.bratexsoft.core.network.mapper.RepositoriesMapper
-import org.junit.Test
 import com.google.common.truth.Truth.assertThat
 import io.bratexsoft.core.data.api.model.Repositories
+import io.bratexsoft.core.network.mapper.RepositoriesMapper
 import io.bratexsoft.core.network.model.repositories.RepositoriesResponseApi
 import org.junit.Before
+import org.junit.Test
 import java.util.UUID
 import kotlin.random.Random
-
 
 class RepositoryMapperTest {
 
@@ -51,7 +50,7 @@ class RepositoryMapperTest {
     fun `method mapTo throw exception when name is null`() {
         val repositoriesResponseApi = RepositoriesResponseApi(
             id = randomInt(),
-            name = null,
+            name = null
         )
         repositoriesMapper.mapTo(repositoriesResponseApi)
     }
