@@ -1,7 +1,6 @@
 package io.bratexsoft.core.data
 
 import io.bratexsoft.core.data.api.datasource.RepositoriesDataSource
-import io.bratexsoft.core.data.api.model.CommitInformation
 import io.bratexsoft.core.data.api.model.OrganizationInformation
 import io.bratexsoft.core.data.api.model.RepositoryInformation
 import io.bratexsoft.core.data.local.client.datasource.RepositoriesLocalDataSource

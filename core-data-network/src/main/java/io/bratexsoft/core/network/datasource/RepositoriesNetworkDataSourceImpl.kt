@@ -2,8 +2,6 @@ package io.bratexsoft.core.network.datasource
 
 import io.bratexsoft.core.data.api.error.RepositoryNotFoundException
 import io.bratexsoft.core.data.api.model.CommitsListItem
-import io.bratexsoft.core.data.api.model.Id
-import io.bratexsoft.core.data.api.model.Name
 import io.bratexsoft.core.data.api.model.OrganizationInformation
 import io.bratexsoft.core.data.api.model.Repositories
 import io.bratexsoft.core.network.api.RepositoriesServiceApi
@@ -14,7 +12,7 @@ import retrofit2.HttpException
 
 class RepositoriesNetworkDataSourceImpl(
     private val repositoriesServiceApi: RepositoriesServiceApi,
-    private val repositoriesMapper: RepositoriesMapper,
+    private val repositoriesMapper: RepositoriesMapper
 ) : RepositoriesNetworkDataSource {
 
     @SuppressWarnings("TooGenericExceptionCaught")
