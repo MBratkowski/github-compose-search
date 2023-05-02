@@ -52,6 +52,8 @@ dependencies {
     implementation(libs.retrofit2.core)
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.okhttp3.core)
+    testImplementation(libs.junit)
+    testImplementation(libs.truth)
 }
 
 fun readProperties(propertiesFile: File) = Properties().apply {
