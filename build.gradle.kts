@@ -19,7 +19,7 @@ buildscript {
 plugins {
     id("org.jmailen.kotlinter") version "3.13.0" apply false
     id("io.gitlab.arturbosch.detekt") version "1.22.0" apply false
-    id("com.google.dagger.hilt.android") version "2.44" apply false
+    id("com.google.dagger.hilt.android") version "2.46" apply false
 }
 
 subprojects {
