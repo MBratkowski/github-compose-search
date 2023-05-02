@@ -10,6 +10,7 @@ buildscript {
     dependencies {
         classpath(libs.detekt.gradle.plugin)
         classpath(libs.gradle)
+        classpath(libs.gradle.versions.plugin)
         classpath(libs.kotlin.gradle.plugin)
 
     }
@@ -23,6 +24,7 @@ plugins {
 
 subprojects {
     apply(from = "../buildscripts/detekt.gradle")
+    apply(from = "../buildscripts/versionsplugin.gradle")
 }
 
 tasks.register("clean", Delete::class) {
