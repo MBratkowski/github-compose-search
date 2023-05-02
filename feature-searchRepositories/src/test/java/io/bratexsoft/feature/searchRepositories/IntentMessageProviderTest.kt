@@ -48,11 +48,11 @@ class IntentMessageProviderTest {
         val result = sut(commitsToShare)
 
         //Assert
-        assertEquals(result, expectedParseResult)
+        assertEquals(result, ExpectedParsedResult)
     }
 }
 
-const val expectedParseResult = "Author: Mateusz\n" +
+const val ExpectedParsedResult = "Author: Mateusz\n" +
         "Message: Hello world\n" +
         "Sha: 1\n" +
         "\n" +
@@ -73,5 +73,4 @@ class TextContentProviderFake : TextContentProvider {
     override fun provideSha(sha: String): String {
         return "Sha: $sha"
     }
-
 }

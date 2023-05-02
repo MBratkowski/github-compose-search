@@ -22,5 +22,4 @@ class SendCommitsIntentProvider @Inject constructor(
         context.startActivity(shareIntent)
     }
 
-
 }
