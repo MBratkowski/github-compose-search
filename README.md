@@ -25,10 +25,14 @@ This project is a sample project to verify skills.
     5. a new message in the selected app already contains passed commits’ information so that the user does not have to copy-paste it manually.
 
 ```
+
 ## How to launch
-To build the app you need to create an `api.properties` file in the project's root, and put the `apiKey` variable with your apiKey from `Github`.
+
+To build the app you need to create an `api.properties` file in the project's root, and put
+the `apiKey` variable with your apiKey from `Github`.
 
 ## Android Stack
+
 - **Kotlin** - primary language
 - **Coroutines** - concurrency
 - **StateFlow** - keeping app state
@@ -43,38 +47,40 @@ To build the app you need to create an `api.properties` file in the project's ro
 - **OkHTTP** - manage headers
 
 ## Modules Structure
+
 - **app** - main app module, all DI modules are added here.
-- **core-designSystem** - contains base theme with support for dark theme and basic components which are wrapping common use cases.
-- **core-data** - implementation of the DataSource from **core-data-api**. Here is connected a network and local data layers.
+- **core-designSystem** - contains base theme with support for dark theme and basic components which
+  are wrapping common use cases.
+- **core-data** - implementation of the DataSource from **core-data-api**. Here is connected a
+  network and local data layers.
 - **core-data-api** - contains models.
 - **core-data-local** - responsible for the local data layer - here is a Room implementation
 - **core-data-network** - responsible for the network data layer - here is a Retrofit implementation
 - **feature-searchRepositoreis** - place where all code related to application features is located.
 
 ## Feature structure
-- **usecases** - classes which take care to make a request to the data layer and handle or make base validation.
+
+- **usecases** - classes which take care to make a request to the data layer and handle or make base
+  validation.
 - **util** - a bunch of classes that are taking responsibility for one thing.
 - **dialogs** - a class containing all dialogs related to this feature.
 - ViewModel/ViewEffect/ViewEvent - logic and events
 
 ## What can be improved
-- **Dependency management** - right now in multi-module applications we reuse the same dependencies in different modules - managing it in the future will be painful. Good practice to prevent this kind of situation by using **Gradle Version Catalog** and keeping all dependencies there.
-- **Navigation** - right now the application has one screen. In a good implementation, there should be two separate screens - one screen to display commits and a second to launch search and information about the latest searches.
-- **Error handling and parsing** - this logic should be delegated to some kind of special error parser.
+
+- **Dependency management** - right now in multi-module applications we reuse the same dependencies
+  in different modules - managing it in the future will be painful. Good practice to prevent this
+  kind of situation by using **Gradle Version Catalog** and keeping all dependencies there.
+- **Navigation** - right now the application has one screen. In a good implementation, there should
+  be two separate screens - one screen to display commits and a second to launch search and
+  information about the latest searches.
+- **Error handling and parsing** - this logic should be delegated to some kind of special error
+  parser.
 - **More unit test** - I didn't have enough time to test all classes, especially ViewModel
 
 ## Screenshots
 
-| Column 1  | Column 2  | Column 3  |
-|:----------|:----------|:----------|
-| Cell 1    | Cell 2    | Cell 3    |
-| Cell 1    | Cell 2    | Cell 3    |
-| Cell 1    | Cell 2    | Cell 3    |
-
-![Alt text](screenshots/base_view.png)
-![Alt text](screenshots/button_enabled_view.png)
-![Alt text](screenshots/error_type_one.png)
-![Alt text](screenshots/error_type_two.png)
-![Alt text](screenshots/selected_commits.png)
-![Alt text](screenshots/selection_commits.png)
-![Alt text](/screenshots/sharing_commits.png)
+| Column 1                                    | Column 2                                         | Column 3                                       |
+|:--------------------------------------------|:-------------------------------------------------|:-----------------------------------------------|
+| ![Alt text](screenshots/base_view.png)      | ![Alt text](screenshots/button_enabled_view.png) | ![Alt text](screenshots/error_type_one.png)    |
+| ![Alt text](screenshots/error_type_two.png) | ![Alt text](screenshots/selected_commits.png)    | ![Alt text](screenshots/selection_commits.png) |
