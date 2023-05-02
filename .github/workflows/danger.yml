@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
       - name: Read value from repository variables
         env:
           API_KEY_ENV: ${{ vars.API_KEY }}
