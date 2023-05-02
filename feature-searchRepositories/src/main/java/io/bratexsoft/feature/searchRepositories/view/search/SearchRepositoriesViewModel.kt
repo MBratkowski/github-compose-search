@@ -128,7 +128,6 @@ fun Throwable.convertToViewEffect(): SearchRepositoryViewEffect {
         }
         is RepositoryNotFoundException -> SearchRepositoryViewEffect.RepositoryNotFoundErrorDialog
         else -> SearchRepositoryViewEffect.ErrorDialog
-
     }
 }
 

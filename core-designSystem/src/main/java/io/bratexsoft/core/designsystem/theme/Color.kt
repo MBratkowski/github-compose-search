@@ -60,5 +60,4 @@ val mdThemeDarkInversePrimary = Color(0xFF006E25)
 val mdThemeDarkShadow = Color(0xFF000000)
 val mdThemeDarkSurfaceTint = Color(0xFF5AE06E)
 
-
 val seed = Color(0xFF2DBA4D)

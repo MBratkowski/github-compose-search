@@ -10,7 +10,7 @@ import javax.inject.Inject
 
 class RepositoriesDataSourceImpl @Inject constructor(
     private val repositoriesNetworkDataSource: RepositoriesNetworkDataSource,
-    private val repositoriesLocalDataSource: RepositoriesLocalDataSource,
+    private val repositoriesLocalDataSource: RepositoriesLocalDataSource
 ) : RepositoriesDataSource {
 
     override suspend fun getRepositoryInfo(organizationInformation: OrganizationInformation): RepositoryInformation {
@@ -27,7 +27,8 @@ class RepositoriesDataSourceImpl @Inject constructor(
                     sha = item.sha,
                     author = item.author.login
                 )
-            }.sortedByDescending { it.date })
+            }.sortedByDescending { it.date }
+        )
 
         repositoriesLocalDataSource.insertRepository(repositoryInformation)
 

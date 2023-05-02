@@ -23,5 +23,4 @@ object RepositoriesDataSourceModule {
             localNetworkDataSource
         )
     }
-
 }

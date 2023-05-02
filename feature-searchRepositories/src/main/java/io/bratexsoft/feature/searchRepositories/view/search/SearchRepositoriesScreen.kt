@@ -67,7 +67,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import io.bratexsoft.core.designsystem.R.dimen as designSystemDimens
 
-
 typealias OnClickWithString = (text: String) -> Unit
 typealias OnClickWithRepository = (repositoryItem: RepositoryInformation) -> Unit
 typealias OnCommitChecked = (isChecked: Boolean, commitSha: String) -> Unit
@@ -79,7 +78,7 @@ fun SearchRepositoriesScreen(
     viewModel: SearchRepositoriesViewModel = hiltViewModel(),
     actionProvider: SearchRepositoriesActionProvider = SearchRepositoriesActionProvider(viewModel),
     sendCommitsIntentProvider: SendCommitsIntentProvider,
-    textContentProvider: TextContentProvider,
+    textContentProvider: TextContentProvider
 ) {
     val uiEffect = viewModel.uiEffect.collectAsState(initial = null)
     val uiState = viewModel.uiState.collectAsState()
@@ -99,12 +98,12 @@ fun SearchRepositoriesScreen(
             snackBarJob = scope.launch {
                 val snackBarResult: SnackbarResult = snackBarHostState.showSnackbar(
                     message = snackBarMessageTemplate.format(commitsCount),
-                    actionLabel = snackBarActionLabel,
+                    actionLabel = snackBarActionLabel
                 )
                 when (snackBarResult) {
                     SnackbarResult.ActionPerformed -> sendCommitsIntentProvider(viewModel.provideCommitsListToShare())
                     else -> {
-                        //Do nothing
+                        // Do nothing
                     }
                 }
             }
@@ -117,17 +116,18 @@ fun SearchRepositoriesScreen(
     Scaffold(snackbarHost = {
         SnackbarHost(hostState = snackBarHostState)
     }, content = { innerPadding ->
-        Modifier.padding(innerPadding)
-        Column(modifier = Modifier.padding(dimensionResource(id = designSystemDimens.spacingLarge))) {
-            Search(searchRepository = actionProvider.invokeSearchRepositoryAction())
-            Content(
-                uiState.value,
-                textContentProvider = textContentProvider,
-                openRepositoryDetails = actionProvider.invokeOpenRepositoryDetailsAction(),
-                onCommitChecked = actionProvider.invokeOnCommitCheckedAction { showSnackBar() },
-                onCommitSelection = actionProvider.invokeOnCommitSelectionAction { snackBarJob?.cancel() })
-        }
-    })
+            Modifier.padding(innerPadding)
+            Column(modifier = Modifier.padding(dimensionResource(id = designSystemDimens.spacingLarge))) {
+                Search(searchRepository = actionProvider.invokeSearchRepositoryAction())
+                Content(
+                    uiState.value,
+                    textContentProvider = textContentProvider,
+                    openRepositoryDetails = actionProvider.invokeOpenRepositoryDetailsAction(),
+                    onCommitChecked = actionProvider.invokeOnCommitCheckedAction { showSnackBar() },
+                    onCommitSelection = actionProvider.invokeOnCommitSelectionAction { snackBarJob?.cancel() }
+                )
+            }
+        })
 
     uiEffect.value?.let {
         when (it) {
@@ -157,7 +157,6 @@ fun SearchRepositoriesScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun Search(searchRepository: OnClickWithString) {
-
     val keyboardController = LocalSoftwareKeyboardController.current
     var searchedRepositoryTextFieldValue by remember { mutableStateOf(TextFieldValue("")) }
 
@@ -190,7 +189,7 @@ fun Content(
     textContentProvider: TextContentProvider,
     openRepositoryDetails: OnClickWithRepository,
     onCommitChecked: OnCommitChecked,
-    onCommitSelection: OnCommitSelection,
+    onCommitSelection: OnCommitSelection
 ) {
     Crossfade(targetState = state.provideScreenState()) {
         when (it) {
@@ -203,7 +202,8 @@ fun Content(
             )
 
             is ScreenState.Content.SearchedRepositories -> SearchedRepositories(
-                it.searchedRepositories, openRepositoryDetails = openRepositoryDetails
+                it.searchedRepositories,
+                openRepositoryDetails = openRepositoryDetails
             )
 
             is ScreenState.Idle -> {
@@ -225,7 +225,8 @@ fun SearchedRepositories(
         LazyColumn(content = {
             items(items = searchedRepositories, itemContent = {
                 RepositoryItem(
-                    repositoryInformation = it, openRepositoryDetails = openRepositoryDetails
+                    repositoryInformation = it,
+                    openRepositoryDetails = openRepositoryDetails
                 )
             })
         })
@@ -237,9 +238,11 @@ fun RepositoryItem(
     repositoryInformation: RepositoryInformation,
     openRepositoryDetails: OnClickWithRepository
 ) {
-    BaseCard(modifier = Modifier
-        .fillMaxWidth()
-        .clickable { openRepositoryDetails(repositoryInformation) }) {
+    BaseCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { openRepositoryDetails(repositoryInformation) }
+    ) {
         Column(modifier = Modifier.padding(dimensionResource(id = designSystemDimens.spacingMedium))) {
             Text(
                 text = stringResource(
@@ -262,7 +265,7 @@ fun CenterCircleProgressIndicator(isVisible: Boolean) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         FadeInFadeOutAnimation(
             visibility = isVisible
@@ -321,7 +324,8 @@ fun CommitsList(
                 onLongClick = {
                     selectionMode = !selectionMode
                     onCommitSelection(selectionMode)
-                }, onCheckedChange = onCommitChecked
+                },
+                onCheckedChange = onCommitChecked
             )
         })
     })
@@ -377,22 +381,25 @@ fun SearchButton(
     text: String
 ) {
     val animatedButtonColors = animateColorAsState(
-        targetValue = if (text.isNotEmpty()) MaterialTheme.colorScheme.primary
-        else MaterialTheme.colorScheme.surfaceVariant,
+        targetValue = if (text.isNotEmpty()) {
+            MaterialTheme.colorScheme.primary
+        } else {
+            MaterialTheme.colorScheme.surfaceVariant
+        },
         animationSpec = tween(100, 0)
     )
     Button(
         modifier = modifier.fillMaxWidth(),
         colors = ButtonDefaults.buttonColors(
             containerColor = animatedButtonColors.value,
-            disabledContainerColor = animatedButtonColors.value,
+            disabledContainerColor = animatedButtonColors.value
         ),
         onClick = onClick,
         enabled = text.isNotEmpty()
     ) {
         Text(
             modifier = modifier,
-            text = stringResource(id = R.string.search_repositories),
+            text = stringResource(id = R.string.search_repositories)
         )
     }
 }

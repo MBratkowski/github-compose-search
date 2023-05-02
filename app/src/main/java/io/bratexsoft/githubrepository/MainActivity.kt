@@ -33,11 +33,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     SearchRepositoriesScreen(
                         sendCommitsIntentProvider = sendCommitsIntentProvider,
-                        textContentProvider = textContentProvider,
+                        textContentProvider = textContentProvider
                     )
                 }
             }
         }
     }
 }
-
