@@ -67,6 +67,7 @@ class SearchRepositoriesViewModel @Inject constructor(
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun searchRepositories(repositoryName: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {

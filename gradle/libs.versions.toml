@@ -1,4 +1,7 @@
 [versions]
+gradle = "8.0.0"
+kotlinGradlePlugin = "1.8.10"
+detektGradlePlugin = "1.22.0"
 compileSdk = "33"
 minSdk = "25"
 room = "2.4.3"
@@ -19,6 +22,10 @@ okhttp3 = "4.10.0"
 
 
 [libraries]
+gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
+detekt-gradle-plugin = { module = "io.gitlab.arturbosch.detekt:detekt-gradle-plugin", version.ref = "detektGradlePlugin" }
+
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
