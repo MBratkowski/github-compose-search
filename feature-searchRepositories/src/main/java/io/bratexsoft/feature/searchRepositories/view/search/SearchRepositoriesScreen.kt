@@ -72,7 +72,6 @@ typealias OnClickWithRepository = (repositoryItem: RepositoryInformation) -> Uni
 typealias OnCommitChecked = (isChecked: Boolean, commitSha: String) -> Unit
 typealias OnCommitSelection = (isSelectedMode: Boolean) -> Unit
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchRepositoriesScreen(
     viewModel: SearchRepositoriesViewModel = hiltViewModel(),
@@ -102,9 +101,7 @@ fun SearchRepositoriesScreen(
                 )
                 when (snackBarResult) {
                     SnackbarResult.ActionPerformed -> sendCommitsIntentProvider(viewModel.provideCommitsListToShare())
-                    else -> {
-                        // Do nothing
-                    }
+                    else -> Unit
                 }
             }
         }
@@ -147,9 +144,7 @@ fun SearchRepositoriesScreen(
                 }
             }
 
-            else -> {
-                // Do nothing
-            }
+            else -> Unit
         }
     }
 }
@@ -167,6 +162,7 @@ fun Search(searchRepository: OnClickWithString) {
         value = searchedRepositoryTextFieldValue,
         onValueChange = { searchedRepositoryTextFieldValue = it },
         maxLines = 1,
+        singleLine = true,
         label = { Text(stringResource(id = R.string.search_repositories_hint)) },
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Search,
