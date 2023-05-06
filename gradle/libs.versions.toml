@@ -1,5 +1,5 @@
 [versions]
-gradle = "8.0.0"
+gradle = "8.0.1"
 kotlinGradlePlugin = "1.8.10"
 detektGradlePlugin = "1.22.0"
 compileSdk = "33"
