@@ -57,7 +57,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.appcompat)
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:4.1.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.0.0")
 
     implementation(project(":core-designSystem"))
     implementation(project(":core-data-api"))
