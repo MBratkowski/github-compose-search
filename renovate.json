@@ -2,5 +2,19 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:base"
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["org.jetbrains.kotlin:kotlin-stdlib-jdk8"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["org.jetbrains.kotlin:kotlin-stdlib"],
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["org.jetbrains.kotlin:kotlin-annotation-processing-gradle"],
+      "enabled": false
+    }
   ]
 }
